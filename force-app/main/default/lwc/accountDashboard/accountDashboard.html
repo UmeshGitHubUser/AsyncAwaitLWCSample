@@ -1,0 +1,92 @@
+<template>
+    <lightning-card title="Account Dashboard" icon-name="standard:account">
+        <div class="slds-var-p-around_medium">
+            <!-- Loading spinner -->
+            <template if:true={loading}>
+                <lightning-spinner alternative-text="Loading data" size="medium"></lightning-spinner>
+            </template>
+            
+            <!-- Error message -->
+            <template if:true={error}>
+                <div class="slds-text-color_error slds-var-p-around_small">
+                    {error}
+                </div>
+            </template>
+            
+            <!-- Account details -->
+            <template if:true={account}>
+                <div class="slds-grid slds-gutters slds-wrap">
+                    <!-- Account information -->
+                    <div class="slds-col slds-size_1-of-1 slds-large-size_1-of-2">
+                        <div class="slds-text-heading_medium slds-var-m-bottom_small">
+                            {account.Name}
+                        </div>
+                        <div class="slds-var-m-bottom_small">
+                            <div><strong>Industry:</strong> {account.Industry}</div>
+                            <div><strong>Phone:</strong> {account.Phone}</div>
+                            <div><strong>Website:</strong> {account.Website}</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Account summary -->
+                    <div class="slds-col slds-size_1-of-1 slds-large-size_1-of-2">
+                        <template if:true={summary}>
+                            <div class="slds-text-heading_medium slds-var-m-bottom_small">
+                                Summary
+                            </div>
+                            <div class="slds-var-m-bottom_small">
+                                <div><strong>Total Opportunity Amount:</strong> 
+                                    <lightning-formatted-number value={summary.totalOpportunityAmount} 
+                                                             format-style="currency" 
+                                                             currency-code="USD">
+                                    </lightning-formatted-number>
+                                </div>
+                                <div><strong>Open Cases:</strong> {summary.openCaseCount}</div>
+                            </div>
+                        </template>
+                    </div>
+                </div>
+                
+                <!-- Recent contacts -->
+                <div class="slds-var-m-top_medium">
+                    <div class="slds-text-heading_medium slds-var-m-bottom_small">
+                        Recent Contacts
+                    </div>
+                    <template if:true={contacts}>
+                        <lightning-datatable
+                            key-field="Id"
+                            data={contacts}
+                            columns={contactColumns}
+                            hide-checkbox-column>
+                        </lightning-datatable>
+                    </template>
+                </div>
+                
+                <!-- Open opportunities -->
+                <div class="slds-var-m-top_medium">
+                    <div class="slds-text-heading_medium slds-var-m-bottom_small">
+                        Open Opportunities
+                    </div>
+                    <template if:true={opportunities}>
+                        <lightning-datatable
+                            key-field="Id"
+                            data={opportunities}
+                            columns={opportunityColumns}
+                            hide-checkbox-column>
+                        </lightning-datatable>
+                    </template>
+                </div>
+            </template>
+            
+            <!-- Refresh button -->
+            <div class="slds-var-m-top_medium slds-align_absolute-center">
+                <lightning-button 
+                    label="Refresh Data" 
+                    icon-name="utility:refresh" 
+                    onclick={handleRefresh}
+                    disabled={loading}>
+                </lightning-button>
+            </div>
+        </div>
+    </lightning-card>
+</template>
